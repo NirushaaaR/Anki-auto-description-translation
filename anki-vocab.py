@@ -1,6 +1,5 @@
 import requests
 import wordsapi
-import tts
 import longdudict
 
 anki_up = requests.get('http://localhost:8765')
@@ -32,10 +31,6 @@ for definition in dictionary.get("results"):
 
 print('description', description.replace('<br>', '\n'))
 
-# get speech
-speech = str(tts.text_to_wav(word))
-print(speech)
-
 # meaning from longdudict
 meaning = longdudict.get_longdudict_meaning(word)
 print(meaning.replace('<br>', '\n'))
@@ -52,7 +47,6 @@ result = requests.post('http://localhost:8765', json={
             "fields": {
                 "Front": word.capitalize(),
                 "meaning": meaning,
-                "speech": "Speech: ",
                 "description": description,
             },
             "options": {
@@ -63,14 +57,7 @@ result = requests.post('http://localhost:8765', json={
                     "checkChildren": False,
                     "checkAllModels": False
                 }
-            },
-            "audio": [{
-                "path": speech,
-                "filename": word + ".wav",
-                "fields": [
-                    "speech"
-                ]
-            }],
+            }
         }
     }
 })
