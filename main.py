@@ -1,5 +1,6 @@
 import requests
 import wordsapi
+import tts
 import longdudict
 
 if __name__ == "__main__":
@@ -36,6 +37,10 @@ if __name__ == "__main__":
     meaning = longdudict.get_longdudict_meaning(word)
     print(meaning.replace('<br>', '\n'))
 
+    # get speech
+    speech = str(tts.text_to_wav(word))
+    print(speech)
+
 
     # add note request
     result = requests.post('http://localhost:8765', json={
@@ -58,7 +63,14 @@ if __name__ == "__main__":
                         "checkChildren": False,
                         "checkAllModels": False
                     }
-                }
+                },
+                "audio": [{
+                "path": speech,
+                "filename": word + ".wav",
+                "fields": [
+                    "speech"
+                ]
+            }],
             }
         }
     })
